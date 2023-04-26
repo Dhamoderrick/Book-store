@@ -34,13 +34,17 @@ class BookController extends Controller
             $searchResults = $this->searchOnElastic($request)?->asArray();
             $ids = Arr::pluck($searchResults['hits']['hits'], '_id');
         }
-        $books = Book::query()
+        if($request->filled('search') && empty($ids)){
+            $books = [];
+        }else {
+            $books = Book::query()
                 ->when(!empty($ids), function($query) use($ids) {
                     $query->whereIn('id', $ids);
                 })
                 ->select('id', 'title', 'author', 'genre', 'isbn', 'published_at', 'publisher', 'image')
                 ->paginate(12)
                 ->withQueryString();
+        }
                     
         return Inertia::render('Books', [
             'books' => $books,
@@ -63,58 +67,10 @@ class BookController extends Controller
                 'query' => [
                     'multi_match' => [
                         'fields' => ['title', 'isbn', 'genre', 'author'],
-                        'query' => $request->search
+                        'query' => $request->search,
                     ]
                 ]
             ]
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreBookRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Book $book)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Book $book)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateBookRequest $request, Book $book)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Book $book)
-    {
-        //
     }
 }

@@ -12,6 +12,7 @@
 -   Change the directory to project root
 -   Put the **.env** file in the root directory
 -   add **ELASTICSEARCH_HOST=localhost** and **ELASTICSEARCH_PORT=9200** to your **.env**
+-   make sure elasticsearch is running in your system. If you are in linux use **sudo systemctl start elasticsearch**
 -   Create the database and add the DB details in .env file
 -   Run **composer install**
 -   Run **npm install**

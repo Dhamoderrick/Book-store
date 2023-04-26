@@ -20,7 +20,7 @@ watch(
     search,
     debounce(() => {
         router.get(
-            "/",
+            route("books"),
             { search: search.value },
             {
                 preserveState: true,
@@ -40,7 +40,7 @@ watch(
                 placeholder="Search"
             />
         </div>
-        <div class="grid grid-cols-4 gap-4 gap-y-6">
+        <div v-if="books?.data" class="grid grid-cols-4 gap-4 gap-y-6">
             <a
                 href="#"
                 class="block group"
@@ -75,6 +75,9 @@ watch(
                     </div>
                 </div>
             </a>
+        </div>
+        <div v-else class="flex justify-center">
+            <p>No data Found</p>
         </div>
 
         <!-- <div class="overflow-x-auto rounded-lg border border-gray-200">
@@ -145,6 +148,6 @@ watch(
                 </tbody>
             </table>
         </div> -->
-        <Pagination :pagination="books" />
+        <Pagination v-if="books?.data" :pagination="books" />
     </div>
 </template>
