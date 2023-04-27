@@ -11,7 +11,17 @@ const props = defineProps<{
     book: BookInterface;
 }>();
 
-const form = useForm({
+const form = useForm<{
+    image: null | File;
+    old_image: string;
+    title: string;
+    author: string;
+    isbn: string;
+    genre: string;
+    published_at: Date;
+    publisher: string;
+    description: string;
+}>({
     title: props.book.title,
     author: props.book.author,
     image: null,
@@ -22,6 +32,11 @@ const form = useForm({
     publisher: props.book.publisher,
     description: props.book.description,
 });
+
+const handleFileChange = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) form.image = target.files[0];
+};
 
 const handleFormSubmit = () => {
     form.post(route("admin.books.update", props.book?.id), {
@@ -169,10 +184,7 @@ const handleFormSubmit = () => {
                             </div>
                             <div>
                                 <InputLabel for="image" value="Image" />
-                                <input
-                                    type="file"
-                                    @input="form.image = $event.target.files[0]"
-                                />
+                                <input type="file" @input="handleFileChange" />
                                 <InputError
                                     class="mt-2"
                                     :message="form.errors.image"
