@@ -29,6 +29,7 @@ Route::get('/', function() {
  * User Books Route
  */
 Route::get('/books', [BookController::class, 'index'])->name('books');
+Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 
 /**
  * Admin Routes

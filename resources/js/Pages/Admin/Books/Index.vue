@@ -2,8 +2,10 @@
 import { PaginationInterface, BookInterface } from "@/types/book";
 import Pagination from "@/Components/Pagination.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, router } from "@inertiajs/vue3";
+import { ref, watch } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { debounce } from "@/Utils/utils";
 
 const props = defineProps<{
     books: PaginationInterface & {
@@ -13,6 +15,20 @@ const props = defineProps<{
         search: string;
     };
 }>();
+const search = ref(props.filter?.search);
+watch(
+    search,
+    debounce(() => {
+        router.get(
+            route("admin.books.index"),
+            { search: search.value },
+            {
+                preserveState: true,
+                replace: false,
+            }
+        );
+    }, 500)
+);
 </script>
 
 <template>
@@ -27,7 +43,13 @@ const props = defineProps<{
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex justify-end mb-4">
+                <div class="flex justify-between mb-4">
+                    <input
+                        v-model="search"
+                        type="search"
+                        class="rounded"
+                        placeholder="Search"
+                    />
                     <Link :href="route('admin.books.create')">
                         <PrimaryButton>Add New</PrimaryButton>
                     </Link>

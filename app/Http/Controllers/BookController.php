@@ -41,7 +41,7 @@ class BookController extends Controller
                 ->when(!empty($ids), function($query) use($ids) {
                     $query->whereIn('id', $ids);
                 })
-                ->select('id', 'title', 'author', 'genre', 'isbn', 'published_at', 'publisher', 'image')
+                ->select('id', 'title', 'slug', 'author', 'genre', 'isbn', 'published_at', 'publisher', 'image')
                 ->paginate(12)
                 ->withQueryString();
         }
@@ -71,6 +71,15 @@ class BookController extends Controller
                     ]
                 ]
             ]
+        ]);
+    }
+
+    public function show($book)
+    {
+        $book = Book::where('slug', $book)->firstOrFail();
+
+        return Inertia::render('ViewBook', [
+            'book' => $book
         ]);
     }
 }

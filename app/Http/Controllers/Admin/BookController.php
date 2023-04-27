@@ -14,9 +14,15 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $books = Book::query()
+                ->when($request->filled('search'), function($query) use($request) {
+                    $query->where('title', 'like', "%{$request->search}%")
+                            ->orWhere('author', 'like', "%{$request->search}%")
+                            ->orWhere('genre', 'like', "%{$request->search}%")
+                            ->orWhere('publisher', 'like', "%{$request->search}%");
+                })
                 ->select('id', 'title', 'author', 'genre', 'isbn', 'published_at', 'publisher')
                 ->paginate(15)
                 ->withQueryString();

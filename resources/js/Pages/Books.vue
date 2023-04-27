@@ -2,7 +2,7 @@
 import { PaginationInterface, BookInterface } from "@/types/book";
 import Pagination from "@/Components/Pagination.vue";
 import { ref, watch } from "vue";
-import { router } from "@inertiajs/vue3";
+import { router, Link } from "@inertiajs/vue3";
 import { debounce } from "@/Utils/utils";
 
 const props = defineProps<{
@@ -55,11 +55,13 @@ watch(
 
                 <div class="mt-1.5">
                     <div class="relative bg-white pt-3">
-                        <h3
-                            class="text-base text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                        >
-                            {{ book?.title }}
-                        </h3>
+                        <Link :href="route('books.show', book.slug)">
+                            <h3
+                                class="text-base text-gray-700 group-hover:underline group-hover:underline-offset-4"
+                            >
+                                {{ book?.title }}
+                            </h3>
+                        </Link>
 
                         <div
                             class="mt-1.5 flex items-center justify-between text-gray-900"
